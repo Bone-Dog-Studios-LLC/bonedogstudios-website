@@ -1,0 +1,11 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "X8RR3M834B.com.bonedogstudios.plan",
+        "paths": ["/plan/u/*", "/plan/b/*"]
+      }
+    ]
+  }
+}

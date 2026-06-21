@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.bonedogstudios.plan",
+      "sha256_cert_fingerprints": [
+        "C2:EB:70:1B:4A:40:56:A8:43:EB:5C:17:4C:6A:2F:16:AA:DC:8E:85:49:9C:DF:BF:2F:F2:C7:9A:A1:99:A4:00",
+        "60:4F:73:45:11:E1:9E:1A:30:00:B1:63:43:A9:41:6D:67:08:D1:DB:6B:83:FB:F0:A0:1A:FF:68:17:BA:22:76"
+      ]
+    }
+  }
+]
