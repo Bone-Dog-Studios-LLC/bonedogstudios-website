@@ -3,29 +3,84 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bone Dog Studios</title>
-  <link rel="stylesheet" href="/style.css">
+  <title>Bone Dog Studios — independent software studio</title>
+  <meta name="description" content="Bone Dog Studios is an independent software studio. No ads, no data selling — software you pay for, plainly.">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
+  <link rel="apple-touch-icon" href="/assets/img/favicon-180.png">
+  <link rel="preload" href="/assets/fonts/space-grotesk-vf.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/inter-vf.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/site.css">
+  <meta property="og:title" content="Bone Dog Studios">
+  <meta property="og:description" content="Independent software studio. Software with a spine.">
+  <meta property="og:image" content="https://bonedogstudios.com/assets/img/favicon-180.png">
 </head>
 <body>
-  <header>
-    <div class="container">
-      <h1>Bone Dog Studios</h1>
-      <p class="tagline">Independent app studio</p>
-    </div>
-  </header>
-  <main class="container">
-    <p>Bone Dog Studios LLC is an independent software studio based in Cass County, Missouri. We make <strong>Plan</strong>, a mobile-first calendar app with social and business scheduling features, built for independent professionals.</p>
+  <a class="skip" href="#main">Skip to content</a>
 
-    <nav class="legal-links">
-      <a href="/plan/privacy">Plan Privacy Policy</a>
-      <a href="/plan/terms">Plan Terms of Service</a>
+  <header class="nav">
+    <a class="brand" href="/">
+      <img class="brand-mark" src="/assets/img/bone-dog-mark.png" alt="">
+      Bone Dog Studios
+    </a>
+    <nav>
+      <a href="/plan/">plan</a>
+      <a href="mailto:admin@bonedogstudios.com">Contact</a>
     </nav>
+  </header>
 
-    <p class="contact">Questions? Contact us at <a href="mailto:admin@bonedogstudios.com">admin@bonedogstudios.com</a></p>
+  <main id="main">
+    <section class="hero">
+      <canvas id="sphere" aria-hidden="true"></canvas>
+      <div class="hero-inner">
+        <img class="hero-logo" src="/assets/img/bone-dog-mark.png" alt="Bone Dog Studios skeleton dog logo">
+        <h1>Bone Dog Studios</h1>
+        <p class="tagline">Software with a spine.</p>
+        <p class="sub">An independent studio building calm, durable software. First up: plan, a calendar for real life.</p>
+        <a class="btn" href="/plan/">See what we're building</a>
+      </div>
+    </section>
 
-    <footer>
-      <p>&copy; 2026 Bone Dog Studios LLC. All rights reserved.</p>
-    </footer>
+    <section class="section reveal" id="ethos">
+      <p class="section-kicker">Ethos</p>
+      <h2>You're the customer, not the product.</h2>
+      <div class="grid-3">
+        <div class="card">
+          <h3>No ads. Ever.</h3>
+          <p>Nothing we make will show you an ad. Attention is for your life, not our margins.</p>
+        </div>
+        <div class="card">
+          <h3>Your data stays yours.</h3>
+          <p>We don't sell data and we don't embed trackers. Even this website makes zero third-party requests.</p>
+        </div>
+        <div class="card">
+          <h3>Pay for the product.</h3>
+          <p>Subscriptions fund the work. That's the whole business model, and it means we answer to users only.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="work">
+      <p class="section-kicker">What we're building</p>
+      <h2>plan</h2>
+      <a class="product-card" href="/plan/">
+        <div>
+          <span class="product-name">plan</span>
+          <p>A mobile calendar that handles your whole life: family, friends, and the business you run. Coming soon to the App Store and Google Play.</p>
+        </div>
+        <span class="go">Take a look &rarr;</span>
+      </a>
+    </section>
   </main>
+
+  <footer class="site-footer">
+    <span>&copy; 2026 Bone Dog Studios LLC</span>
+    <nav>
+      <a href="/plan/privacy/">Plan Privacy</a>
+      <a href="/plan/terms/">Plan Terms</a>
+      <a href="mailto:admin@bonedogstudios.com">admin@bonedogstudios.com</a>
+    </nav>
+  </footer>
+
+  <script src="/assets/sphere.js" defer></script>
 </body>
 </html>
