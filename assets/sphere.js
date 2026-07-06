@@ -44,7 +44,7 @@
     return { x: Math.cos(el) * Math.sin(az), y: Math.sin(el), z: Math.cos(el) * Math.cos(az) };
   }
   var links = [
-    { label: "plan",    href: "/plan/",                            d: dir(0, 8)    },
+    { label: "/plan",   href: "/plan/",                            d: dir(0, 8)    },
     { label: "ethos",   href: "#ethos",                            d: dir(60, -12) },
     { label: "work",    href: "#work",                             d: dir(125, 14) },
     { label: "contact", href: "mailto:admin@bonedogstudios.com",   d: dir(185, -6) },
