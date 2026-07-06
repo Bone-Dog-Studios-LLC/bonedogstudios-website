@@ -1,40 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Open in Plan</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Page not found — Bone Dog Studios</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
+  <link rel="stylesheet" href="/assets/site.css">
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background:#0f1115; color:#e8ecf2; display:flex; min-height:100vh; margin:0;
-      align-items:center; justify-content:center; text-align:center; padding:24px; }
-    .card { max-width:440px; }
-    h1 { font-size:22px; margin:0 0 12px; }
-    p { color:#9aa6b2; line-height:1.6; }
-    b { color:#e8ecf2; }
-    .row { display:flex; gap:12px; justify-content:center; margin-top:22px; flex-wrap:wrap; }
-    a.btn { background:#6ea8fe; color:#0f1115; text-decoration:none; font-weight:700;
-      padding:12px 18px; border-radius:10px; }
-    .note { font-size:13px; margin-top:14px; }
+    /* small additions for the deep-link fallback content injected below */
+    .row { display: flex; gap: 12px; justify-content: center; margin-top: 26px; flex-wrap: wrap; }
+    .note { font-size: 13px; margin-top: 16px; color: var(--muted); }
+    .hero-inner b { color: var(--bone); }
   </style>
 </head>
 <body>
-  <div class="card" id="content">
-    <h1>Page not found</h1>
-    <p>This link isn’t available on the web.</p>
-  </div>
+  <main class="hero" style="min-height: 100svh;">
+    <div class="hero-inner" id="content" style="pointer-events: auto;">
+      <img class="hero-logo" src="/assets/img/bone-dog-mark.png" alt="Bone Dog Studios skeleton dog logo">
+      <h1 style="font: 600 clamp(2rem, 5vw, 3rem)/1.1 var(--display); color: var(--bone);">This page buried its bone elsewhere.</h1>
+      <p class="sub">The page you're after doesn't exist. Try the homepage, or the plan page.</p>
+      <a class="btn" href="/">Back to Bone Dog Studios</a>
+    </div>
+  </main>
   <script>
     // Show an "open in app" message only for Plan connect / business links.
+    // (Deep-link fallback behavior from the app-links work — do not remove.)
     var p = location.pathname || "";
     if (p.indexOf('/plan/u/') === 0 || p.indexOf('/plan/b/') === 0) {
       document.getElementById('content').innerHTML =
-        '<h1>Open this in the Plan app</h1>' +
-        '<p>You need the <b>Plan</b> app to use this link. If you already have it, open Plan and tap ' +
+        '<img class="hero-logo" src="/assets/img/bone-dog-mark.png" alt="Bone Dog Studios skeleton dog logo">' +
+        '<h1 style="font: 600 clamp(2rem, 5vw, 3rem)/1.1 var(--display); color: var(--bone);">Open this in the plan app</h1>' +
+        '<p class="sub">You need the <b>plan</b> app to use this link. If you already have it, open plan and tap ' +
         '<b>Scan a Code</b> — or get the app below.</p>' +
         '<div class="row">' +
-        '<a class="btn" href="https://play.google.com/store/apps/details?id=com.bonedogstudios.plan">Get Plan on Google Play</a>' +
+        '<a class="btn solid" href="https://play.google.com/store/apps/details?id=com.bonedogstudios.plan">Get plan on Google Play</a>' +
         '</div>' +
-        '<p class="note">On iPhone, Plan is currently in TestFlight beta.</p>';
+        '<p class="note">On iPhone, plan is currently in TestFlight beta.</p>';
     }
   </script>
 </body>
