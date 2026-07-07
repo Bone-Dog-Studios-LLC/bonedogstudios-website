@@ -143,10 +143,8 @@ img { max-width: 100%; display: block; }
   transition: border-color 0.2s, transform 0.2s;
 }
 .product-card:hover { border-color: var(--line-strong); transform: translateY(-2px); }
-.product-name {
-  font: 600 2rem/1 var(--display); color: var(--bone); letter-spacing: -0.01em;
-}
-.product-card p { color: var(--muted); margin-top: 10px; max-width: 520px; }
+.product-logo { width: 64px; flex-shrink: 0; }
+.product-card p { color: var(--muted); max-width: 520px; }
 .product-card .go { font: 500 15px/1 var(--display); color: var(--muted); white-space: nowrap; }
 .product-card:hover .go { color: var(--bone); }
 
