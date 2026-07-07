@@ -85,6 +85,7 @@ img { max-width: 100%; display: block; }
   width: 132px; margin: 0 auto 28px;
   filter: drop-shadow(0 0 36px rgba(242, 235, 221, 0.16)); /* faint bone glow */
 }
+.hero-logo.app-logo { width: 96px; margin: 26px auto 26px; }
 .hero h1 {
   font: 600 clamp(2.6rem, 7vw, 4.6rem)/1.05 var(--display);
   color: var(--bone); letter-spacing: -0.02em;
@@ -157,23 +158,10 @@ img { max-width: 100%; display: block; }
   display: grid; grid-template-columns: repeat(3, 1fr);
   gap: 28px; margin-top: 56px; justify-items: center;
 }
-.phone {
-  position: relative; width: min(100%, 270px); aspect-ratio: 9 / 19;
-  border: 1px solid var(--line-strong); border-radius: 34px;
-  padding: 10px; background: var(--bg-raised);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+.shot {
+  width: min(100%, 290px);
+  filter: drop-shadow(0 26px 50px rgba(0, 0, 0, 0.55));
 }
-.phone img, .phone-placeholder {
-  position: absolute; inset: 10px; width: calc(100% - 20px); height: calc(100% - 20px);
-  border-radius: 26px; object-fit: cover;
-}
-.phone-placeholder {
-  background: linear-gradient(160deg, #17171b, #0e0e11 70%);
-  display: flex; align-items: center; justify-content: center;
-  color: var(--muted); font: 500 13px/1.4 var(--display);
-  letter-spacing: 0.08em; text-align: center; /* no uppercase: "plan" stays lowercase */
-}
-.phone img { z-index: 2; } /* real screenshot covers the placeholder */
 
 .cta-panel {
   margin-top: 90px; padding: 56px 32px; text-align: center;
@@ -241,7 +229,7 @@ html.js .reveal.is-visible { opacity: 1; transform: none; }
 @media (max-width: 860px) {
   .grid-3, .phones { grid-template-columns: 1fr; }
   .phones { max-width: 300px; margin-left: auto; margin-right: auto; }
-  .phone:nth-child(n+2) { display: none; } /* one phone on small screens */
+  .shot:nth-child(n+2) { display: none; } /* one screenshot on small screens */
   .product-card { flex-direction: column; align-items: flex-start; }
   .section { padding: 72px 24px; }
   .nav nav { gap: 18px; }
