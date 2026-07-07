@@ -56,10 +56,10 @@
   ];
   links.forEach(function (l) { l.d = l.dd; l.sx = 0; l.sy = 0; l.visible = false; l.hot = 0; });
 
-  /* The /plan node renders as the studio mark with its label underneath. */
+  /* The /plan node renders as the /plan app logo with its label underneath. */
   var mark = new Image(), markReady = false;
   mark.onload = function () { markReady = true; needsDraw = true; };
-  mark.src = "/assets/img/bone-dog-mark.png";
+  mark.src = "/assets/img/plan-mark.png";
 
   var W = 0, H = 0, dpr = 1, F = 0, cx = 0, cy = 0, fadeR = 0;
   function resize() {
