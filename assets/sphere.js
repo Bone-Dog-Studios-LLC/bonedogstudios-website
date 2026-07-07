@@ -37,24 +37,25 @@
     pts.push({ x: Math.cos(GA * i) * r, y: y, z: Math.sin(GA * i) * r });
   }
 
-  /* Link stars: clustered within ~130 degrees of azimuth so several are on
-     screen at once; the initial view centers the cluster. */
-  function dir(azDeg, elDeg) {
-    var az = azDeg * Math.PI / 180, el = elDeg * Math.PI / 180;
-    return { x: Math.cos(el) * Math.sin(az), y: Math.sin(el), z: Math.cos(el) * Math.cos(az) };
-  }
-  /* Wide screens ring the hero text with fixed directions; narrow screens
-     derive directions from pixel targets in the clear zones above/below the
-     text (computed in resize, where W/H are known). */
+  /* Wide screens ring the hero text with fixed angles; narrow screens derive
+     angles from pixel targets in the clear zones above/below the text
+     (computed in resize, where W/H are known). The link band REPEATS around
+     the sphere every LINK_PERIOD degrees, so when the cluster drifts off one
+     edge its next copy is already entering the other side — no dead time. */
+  var LINK_PERIOD = 110 * Math.PI / 180;
   var links = [
-    { label: "/plan",   href: "/plan/",                          dd: dir(8, -3),   logo: true },
-    { label: "ethos",   href: "#ethos",                          dd: dir(18, 22)  },
-    { label: "work",    href: "#work",                           dd: dir(42, 18)  },
-    { label: "contact", href: "mailto:admin@bonedogstudios.com", dd: dir(46, -8)  },
-    { label: "privacy", href: "/plan/privacy/",                  dd: dir(18, -20) },
-    { label: "terms",   href: "/plan/terms/",                    dd: dir(42, -22) },
+    { label: "/plan",   href: "/plan/",                          az: 8,  el: -3,  logo: true },
+    { label: "ethos",   href: "#ethos",                          az: 18, el: 22  },
+    { label: "work",    href: "#work",                           az: 42, el: 18  },
+    { label: "contact", href: "mailto:admin@bonedogstudios.com", az: 46, el: -8  },
+    { label: "privacy", href: "/plan/privacy/",                  az: 18, el: -20 },
+    { label: "terms",   href: "/plan/terms/",                    az: 42, el: -22 },
   ];
-  links.forEach(function (l) { l.d = l.dd; l.sx = 0; l.sy = 0; l.visible = false; l.hot = 0; });
+  var RAD = Math.PI / 180;
+  links.forEach(function (l) {
+    l.azV = l.az * RAD; l.elV = l.el * RAD;   // view angles in use (resize may override)
+    l.sx = 0; l.sy = 0; l.visible = false; l.hot = 0;
+  });
 
   /* The /plan node renders as the /plan app logo with its label underneath. */
   var mark = new Image(), markReady = false;
@@ -83,12 +84,11 @@
       };
       links.forEach(function (l) {
         var t = targets[l.label];
-        var az = 30 + Math.atan2(t[0] - cx, F) * 180 / Math.PI;
-        var el = Math.atan2(t[1] - cy, F) * 180 / Math.PI;
-        l.d = dir(az, el);
+        l.azV = 30 * RAD + Math.atan2(t[0] - cx, F);
+        l.elV = Math.atan2(t[1] - cy, F);
       });
     } else {
-      links.forEach(function (l) { l.d = l.dd; });
+      links.forEach(function (l) { l.azV = l.az * RAD; l.elV = l.el * RAD; });
     }
     needsDraw = true;
   }
@@ -142,7 +142,15 @@
     ctx.textBaseline = "middle";
     for (var j = 0; j < links.length; j++) {
       var L = links[j];
-      var w = rotate(L.d, sy, cyw, sx, cxw);
+      /* screen azimuth = link azimuth + view yaw, wrapped into the repeating
+         band so the cluster re-enters as soon as it leaves */
+      var rel = L.azV + rotY;
+      rel = ((rel % LINK_PERIOD) + LINK_PERIOD + LINK_PERIOD / 2) % LINK_PERIOD - LINK_PERIOD / 2;
+      var ce = Math.cos(L.elV), se = Math.sin(L.elV);
+      var w = { x: ce * Math.sin(rel), y: se, z: ce * Math.cos(rel) };
+      var wy = w.y * cxw - w.z * sx;            // pitch (same as ambient stars)
+      var wz = w.y * sx + w.z * cxw;
+      w = { x: w.x, y: wy, z: wz };
       if (w.z < MIN_Z + 0.06) { L.visible = false; L.hot += (0 - L.hot) * 0.2; continue; }
       var lx = cx + (w.x / w.z) * F;
       var ly = cy + (w.y / w.z) * F;
