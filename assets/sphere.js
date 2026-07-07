@@ -37,21 +37,29 @@
     pts.push({ x: Math.cos(GA * i) * r, y: y, z: Math.sin(GA * i) * r });
   }
 
-  /* Link stars: fixed directions chosen to ring the viewer near the equator,
-     so a slow horizontal drift carries each one past the camera in turn. */
+  /* Link stars: clustered within ~130 degrees of azimuth so several are on
+     screen at once; the initial view centers the cluster. */
   function dir(azDeg, elDeg) {
     var az = azDeg * Math.PI / 180, el = elDeg * Math.PI / 180;
     return { x: Math.cos(el) * Math.sin(az), y: Math.sin(el), z: Math.cos(el) * Math.cos(az) };
   }
+  /* Wide screens ring the hero text with fixed directions; narrow screens
+     derive directions from pixel targets in the clear zones above/below the
+     text (computed in resize, where W/H are known). */
   var links = [
-    { label: "/plan",   href: "/plan/",                            d: dir(0, 8)    },
-    { label: "ethos",   href: "#ethos",                            d: dir(60, -12) },
-    { label: "work",    href: "#work",                             d: dir(125, 14) },
-    { label: "contact", href: "mailto:admin@bonedogstudios.com",   d: dir(185, -6) },
-    { label: "privacy", href: "/plan/privacy/",                    d: dir(245, 12) },
-    { label: "terms",   href: "/plan/terms/",                      d: dir(305, -14)},
+    { label: "/plan",   href: "/plan/",                          dd: dir(8, -3),   logo: true },
+    { label: "ethos",   href: "#ethos",                          dd: dir(18, 22)  },
+    { label: "work",    href: "#work",                           dd: dir(42, 18)  },
+    { label: "contact", href: "mailto:admin@bonedogstudios.com", dd: dir(46, -8)  },
+    { label: "privacy", href: "/plan/privacy/",                  dd: dir(18, -20) },
+    { label: "terms",   href: "/plan/terms/",                    dd: dir(42, -22) },
   ];
-  links.forEach(function (l) { l.sx = 0; l.sy = 0; l.visible = false; l.hot = 0; });
+  links.forEach(function (l) { l.d = l.dd; l.sx = 0; l.sy = 0; l.visible = false; l.hot = 0; });
+
+  /* The /plan node renders as the studio mark with its label underneath. */
+  var mark = new Image(), markReady = false;
+  mark.onload = function () { markReady = true; needsDraw = true; };
+  mark.src = "/assets/img/bone-dog-mark.png";
 
   var W = 0, H = 0, dpr = 1, F = 0, cx = 0, cy = 0, fadeR = 0;
   function resize() {
@@ -61,12 +69,34 @@
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     F = Math.min(W, H) * 0.85;         // focal length (px)
     cx = W / 2; cy = H / 2;
-    fadeR = Math.min(W, H) * 0.30;     // keep the center calm around the dog
+    fadeR = Math.min(W, H) * 0.26;     // keep the center calm around the dog
+    if (W < 700) {
+      /* pixel targets: top zone clears the 70px nav and the dog; bottom zone
+         clears the CTA button; the initial view (rotY=-0.52) centers az 30 */
+      var targets = {
+        "/plan":   [0.50 * W, Math.max(112, cy - 310)],
+        "privacy": [0.16 * W, cy - 190],
+        "terms":   [0.84 * W, cy - 190],
+        "ethos":   [0.17 * W, cy + 265],
+        "work":    [0.83 * W, cy + 265],
+        "contact": [0.50 * W, Math.min(H - 60, cy + 330)],
+      };
+      links.forEach(function (l) {
+        var t = targets[l.label];
+        var az = 30 + Math.atan2(t[0] - cx, F) * 180 / Math.PI;
+        var el = Math.atan2(t[1] - cy, F) * 180 / Math.PI;
+        l.d = dir(az, el);
+      });
+    } else {
+      links.forEach(function (l) { l.d = l.dd; });
+    }
     needsDraw = true;
   }
 
-  /* View angles. Drag "grabs the sky": stars follow the pointer. */
-  var rotY = -0.35, rotX = 0.05;
+  /* View angles. Drag "grabs the sky": stars follow the pointer.
+     rotY starts at minus the link cluster's center azimuth (30deg) so the
+     cluster rings the hero on load. */
+  var rotY = -0.52, rotX = 0.05;
   var BASE_VY = reduced ? 0 : 0.000045;
   var velY = BASE_VY, velX = 0;
   var dragging = false, lastX = 0, lastY = 0, downX = 0, downY = 0, moved = 0;
@@ -121,19 +151,36 @@
       L.hot += ((hover === L ? 1 : 0) - L.hot) * 0.18;    // eased hover state
       var edge2 = Math.min(1, (w.z - MIN_Z) / 0.2);
       var fade = edge2 * (0.55 + 0.45 * centerFade(lx, ly));
-      var rad = 3 + 1.6 * L.hot;
 
-      ctx.globalAlpha = fade * (0.9 + 0.1 * L.hot);
-      ctx.fillStyle = BONE;
-      ctx.beginPath(); ctx.arc(lx, ly, rad, 0, Math.PI * 2); ctx.fill();
+      if (L.logo && markReady) {
+        /* the studio mark, label centered underneath */
+        var mh = 34 + 8 * L.hot;
+        var mw = mh * (mark.width / mark.height);
+        ctx.globalAlpha = fade * (0.85 + 0.15 * L.hot);
+        ctx.drawImage(mark, lx - mw / 2, ly - mh / 2, mw, mh);
+        ctx.globalAlpha = fade * (0.25 + 0.55 * L.hot);   // halo ring
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.arc(lx, ly, mh * 0.75 + 3 * L.hot, 0, Math.PI * 2);
+        ctx.strokeStyle = BONE; ctx.stroke();
+        ctx.globalAlpha = fade * (0.75 + 0.25 * L.hot);
+        ctx.fillStyle = BONE;
+        ctx.textAlign = "center";
+        ctx.fillText(L.label, lx, ly + mh * 0.75 + 16 + 3 * L.hot);
+        ctx.textAlign = "left";
+      } else {
+        var rad = 3 + 1.6 * L.hot;
+        ctx.globalAlpha = fade * (0.9 + 0.1 * L.hot);
+        ctx.fillStyle = BONE;
+        ctx.beginPath(); ctx.arc(lx, ly, rad, 0, Math.PI * 2); ctx.fill();
 
-      ctx.globalAlpha = fade * (0.35 + 0.55 * L.hot);     // halo ring
-      ctx.lineWidth = 1;
-      ctx.beginPath(); ctx.arc(lx, ly, rad + 5 + 3 * L.hot, 0, Math.PI * 2);
-      ctx.strokeStyle = BONE; ctx.stroke();
+        ctx.globalAlpha = fade * (0.35 + 0.55 * L.hot);   // halo ring
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.arc(lx, ly, rad + 5 + 3 * L.hot, 0, Math.PI * 2);
+        ctx.strokeStyle = BONE; ctx.stroke();
 
-      ctx.globalAlpha = fade * (0.65 + 0.35 * L.hot);
-      ctx.fillText(L.label, lx + rad + 12, ly);
+        ctx.globalAlpha = fade * (0.65 + 0.35 * L.hot);
+        ctx.fillText(L.label, lx + rad + 12, ly);
+      }
     }
     ctx.globalAlpha = 1;
   }
@@ -142,10 +189,15 @@
     for (var j = 0; j < links.length; j++) {
       var L = links[j];
       if (!L.visible) continue;
-      var lw = ctx.measureText(L.label).width;
       var dx = x - L.sx, dy = y - L.sy;
-      if (Math.sqrt(dx * dx + dy * dy) < 22) return L;
-      if (x > L.sx && x < L.sx + lw + 26 && Math.abs(dy) < 14) return L; // label hit box
+      if (L.logo) {
+        /* mark box + centered label underneath */
+        if (Math.abs(dx) < 34 && dy > -30 && dy < 52) return L;
+      } else {
+        var lw = ctx.measureText(L.label).width;
+        if (Math.sqrt(dx * dx + dy * dy) < 22) return L;
+        if (x > L.sx && x < L.sx + lw + 26 && Math.abs(dy) < 14) return L; // label hit box
+      }
     }
     return null;
   }
