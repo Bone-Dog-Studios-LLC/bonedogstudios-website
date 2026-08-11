@@ -48,6 +48,7 @@
     { label: "ethos",   href: "#ethos",                          az: 18, el: 22  },
     { label: "work",    href: "#work",                           az: 42, el: 18  },
     { label: "contact", href: "mailto:admin@bonedogstudios.com", az: 46, el: -8  },
+    { label: "support", href: "/plan/support/",                  az: 30, el: -12 },
     { label: "privacy", href: "/plan/privacy/",                  az: 18, el: -20 },
     { label: "terms",   href: "/plan/terms/",                    az: 42, el: -22 },
   ];
@@ -81,9 +82,15 @@
         "ethos":   [0.17 * W, cy + 265],
         "work":    [0.83 * W, cy + 265],
         "contact": [0.50 * W, Math.min(H - 60, cy + 330)],
+        "support": [0.50 * W, cy - 190],
       };
       links.forEach(function (l) {
         var t = targets[l.label];
+        if (!t) {                      // node without a pixel target: keep its
+          l.azV = l.az * RAD;          // wide-screen angles instead of crashing
+          l.elV = l.el * RAD;          // the whole constellation
+          return;
+        }
         l.azV = 30 * RAD + Math.atan2(t[0] - cx, F);
         l.elV = Math.atan2(t[1] - cy, F);
       });
