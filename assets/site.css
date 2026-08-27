@@ -1,4 +1,6 @@
-/* Bone Dog Studios — site design system (new pages only; legal pages use style.css) */
+/* Bone Dog Studios — site design system. Every page loads this, legal pages
+   included; the old style.css was deleted in the 2026-07-07 redesign.
+   Mirrored to claude.ai/design — see design-system/README.md. */
 
 @font-face {
   font-family: "Space Grotesk";
