@@ -172,6 +172,16 @@ img { max-width: 100%; display: block; }
 .cta-panel h2 { margin: 0 auto 12px; }
 .cta-panel p { margin: 0 auto; max-width: 520px; color: var(--muted); }
 
+/* Store buttons: a wrapping row of .btn, used by the /plan call to action and
+   by the deep-link fallback in 404.html. */
+.store-row {
+  display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;
+  margin-top: 26px;
+}
+.store-row .btn { margin-top: 0; }
+.store-note { font-size: 13px; margin-top: 16px; color: var(--muted); }
+.cta-panel .store-note { margin-top: 20px; }
+
 /* ---------- Footer ---------- */
 .site-footer {
   border-top: 1px solid var(--line);

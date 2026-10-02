@@ -317,7 +317,7 @@ page(
     <img class="product-logo" src="../assets/img/plan-mark.png" alt="/plan app logo">
     <div>
       <p>A mobile calendar that handles your whole life: family, friends, and the business
-         you run. Coming soon to the App Store and Google Play.</p>
+         you run. Available now on the App Store and Google Play.</p>
     </div>
     <span class="go">Take a look &rarr;</span>
   </a>
@@ -332,7 +332,7 @@ page(
     '''<section class="section">
   <div class="cta-panel" style="margin-top:0">
     <h2>A calendar for real life.</h2>
-    <p>Coming soon to the App Store and Google Play.</p>
+    <p>Available now on the App Store and Google Play.</p>
     <a class="btn solid" href="#">Get /plan</a>
   </div>
 </section>''',

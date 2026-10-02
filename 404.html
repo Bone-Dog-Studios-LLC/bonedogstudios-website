@@ -5,11 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Page not found — Bone Dog Studios</title>
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
-  <link rel="stylesheet" href="/assets/site.css?v=8">
+  <link rel="stylesheet" href="/assets/site.css?v=9">
   <style>
-    /* small additions for the deep-link fallback content injected below */
-    .row { display: flex; gap: 12px; justify-content: center; margin-top: 26px; flex-wrap: wrap; }
-    .note { font-size: 13px; margin-top: 16px; color: var(--muted); }
+    /* small addition for the deep-link fallback content injected below */
     .hero-inner b { color: var(--bone); }
   </style>
 </head>
@@ -23,19 +21,54 @@
     </div>
   </main>
   <script>
-    // Show an "open in app" message only for Plan connect / business links.
-    // (Deep-link fallback behavior from the app-links work — do not remove.)
+    // Plan connect links (/plan/u/) and business links (/plan/b/) open the app
+    // when it is installed. When it is not, the browser lands here, so this is
+    // the page a new customer sees first: send them to the store for THEIR
+    // phone. (Deep-link fallback behavior from the app-links work — do not
+    // remove.)
+    //
+    // 2026-10-02: this used to show one Google Play button to everyone and
+    // told iPhone users the app was in TestFlight. An iPhone user who pressed
+    // it got Google's "This Google account is not yet associated with a
+    // device" dialog and could not install.
     var p = location.pathname || "";
     if (p.indexOf('/plan/u/') === 0 || p.indexOf('/plan/b/') === 0) {
+      var APP_STORE = 'https://apps.apple.com/us/app/plan-by-bone-dog-studios/id6777535954';
+      var PLAY = 'https://play.google.com/store/apps/details?id=com.bonedogstudios.plan';
+      var ua = navigator.userAgent || '';
+      // iPadOS reports itself as a Mac; a Mac with a touch screen is an iPad.
+      var isApple = /iPhone|iPad|iPod/.test(ua) ||
+        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      var isAndroid = /Android/i.test(ua);
+
+      var appStoreBtn = '<a class="btn solid" href="' + APP_STORE + '">Download on the App Store</a>';
+      var playBtn = '<a class="btn solid" href="' + PLAY + '">Get it on Google Play</a>';
+
+      // Android first: the iPad test above (Mac platform + touch) also matches
+      // a desktop browser emulating a phone, and real Android never reports a
+      // Mac platform.
+      var buttons, note;
+      if (isAndroid) {
+        buttons = playBtn;
+        note = 'After it installs, come back and open this link again. ' +
+          'If Google Play opens as a web page and will not install, open the Play Store app and search for ' +
+          '<b>Plan by Bone Dog Studios</b>.';
+      } else if (isApple) {
+        buttons = appStoreBtn;
+        note = 'After it installs, come back and open this link again.';
+      } else {
+        buttons = appStoreBtn + playBtn;
+        note = '/plan is a phone app. Open this link on your iPhone or Android phone.';
+      }
+
+      document.title = 'Open in /plan — Bone Dog Studios';
       document.getElementById('content').innerHTML =
         '<img class="hero-logo" src="/assets/img/bone-dog-mark.png" alt="Bone Dog Studios skeleton dog logo">' +
         '<h1 style="font: 600 clamp(2rem, 5vw, 3rem)/1.1 var(--display); color: var(--bone);">Open this in the /plan app</h1>' +
-        '<p class="sub">You need the <b>/plan</b> app to use this link. If you already have it, open /plan and tap ' +
-        '<b>Scan a Code</b> — or get the app below.</p>' +
-        '<div class="row">' +
-        '<a class="btn solid" href="https://play.google.com/store/apps/details?id=com.bonedogstudios.plan">Get /plan on Google Play</a>' +
-        '</div>' +
-        '<p class="note">On iPhone, /plan is currently in TestFlight beta.</p>';
+        '<p class="sub">This link opens in the <b>/plan</b> app. Get the app to use it. ' +
+        'Already have it? Open /plan and tap <b>Scan a Code</b>.</p>' +
+        '<div class="store-row">' + buttons + '</div>' +
+        '<p class="store-note">' + note + '</p>';
     }
   </script>
 </body>
