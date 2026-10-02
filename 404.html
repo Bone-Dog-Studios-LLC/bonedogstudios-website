@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Page not found — Bone Dog Studios</title>
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
-  <link rel="stylesheet" href="/assets/site.css?v=9">
+  <link rel="stylesheet" href="/assets/site.css?v=10">
   <style>
     /* small addition for the deep-link fallback content injected below */
     .hero-inner b { color: var(--bone); }
@@ -41,8 +41,10 @@
         (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
       var isAndroid = /Android/i.test(ua);
 
-      var appStoreBtn = '<a class="btn solid" href="' + APP_STORE + '">Download on the App Store</a>';
-      var playBtn = '<a class="btn solid" href="' + PLAY + '">Get it on Google Play</a>';
+      var appStoreBtn = '<a class="store-badge apple" href="' + APP_STORE + '">' +
+        '<img src="/assets/img/badges/app-store-badge.svg" alt="Download on the App Store"></a>';
+      var playBtn = '<a class="store-badge google" href="' + PLAY + '">' +
+        '<img src="/assets/img/badges/google-play-badge.png" alt="Get it on Google Play"></a>';
 
       // Android first: the iPad test above (Mac platform + touch) also matches
       // a desktop browser emulating a phone, and real Android never reports a

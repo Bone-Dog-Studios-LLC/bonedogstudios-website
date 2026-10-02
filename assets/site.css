@@ -179,6 +179,15 @@ img { max-width: 100%; display: block; }
   margin-top: 26px;
 }
 .store-row .btn { margin-top: 0; }
+/* Official store badges (Apple and Google artwork, unaltered, self-hosted so
+   the site keeps making zero third-party requests). Apple's rules: at least
+   40 px tall, clear space of a quarter of the height, one Apple badge per
+   layout. Google's: at least 28 px tall, clear space of a quarter. The
+   Google PNG carries its own transparent margin, so it is drawn taller to
+   put its visible badge at the same height as Apple's. */
+.store-row .store-badge { display: inline-block; line-height: 0; }
+.store-row .store-badge img { display: block; height: 48px; width: auto; }
+.store-row .store-badge.google img { height: 72px; margin: -12px 0; }
 .store-note { font-size: 13px; margin-top: 16px; color: var(--muted); }
 .cta-panel .store-note { margin-top: 20px; }
 
