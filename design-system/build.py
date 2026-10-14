@@ -96,7 +96,7 @@ page(
     </div>
     <div>
       <p class="ds-note" style="padding:0 0 8px">Tagline · Space Grotesk 500</p>
-      <p class="tagline" style="margin:0">No manual needed.</p>
+      <p class="tagline" style="margin:0">Software that makes sense.</p>
     </div>
     <div>
       <p class="ds-note" style="padding:0 0 8px">Section h2 · Space Grotesk 600 · clamp(1.7rem, 4vw, 2.4rem)</p>
@@ -268,7 +268,7 @@ page(
   <div class="hero-inner">
     <img class="hero-logo" src="../assets/img/bone-dog-mark.png" alt="Bone Dog Studios skeleton dog logo">
     <h1>Bone Dog Studios</h1>
-    <p class="tagline">No manual needed.</p>
+    <p class="tagline">Software that makes sense.</p>
     <p class="sub">An independent studio making mobile-friendly software that is easy to use
        and intuitive. First up: /plan, a calendar for real life.</p>
     <a class="btn" href="#">See what we&rsquo;re building</a>
