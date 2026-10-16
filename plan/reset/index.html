@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>document.documentElement.classList.add("js");</script>
+  <title>Set your new password | /plan</title>
+  <meta name="description" content="Choose a new password for your /plan account.">
+  <meta name="robots" content="noindex">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
+  <link rel="apple-touch-icon" href="/assets/img/favicon-180.png">
+  <link rel="preload" href="/assets/fonts/space-grotesk-vf.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/inter-vf.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/site.css?v=10">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="nav">
+    <a class="brand" href="/">
+      <img class="brand-mark" src="/assets/img/bone-dog-mark.png" alt="">
+      Bone Dog Studios
+    </a>
+    <nav>
+      <a href="/plan/">/plan</a>
+      <a href="/plan/support/">Support</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <!--
+      Supabase sends the user here after it verifies the password-reset link
+      (the app passes this URL as redirectTo in resetPasswordForEmail; it must
+      be on the project's Redirect URL allowlist). Two shapes arrive:
+
+        success:  /plan/reset/?code=<pkce code>
+        failure:  /plan/reset/?error=access_denied&error_code=otp_expired
+                  &error_description=...   (sometimes in the #fragment instead)
+
+      With a code, "Open Plan" hands ONLY that code to the app
+      (io.supabase.plan://reset-password?code=...). The app exchanges it with
+      the PKCE verifier it stored when the reset was requested; that verifier
+      also tells it this is a recovery, so no `type` parameter is read or
+      forwarded. Opened on any other device the exchange cannot complete, so
+      the copy says to open Plan on the phone the reset was asked from. Before
+      this page existed (Part J J4, 2026-10-16) the email redirected to the
+      bare io.supabase.plan:// scheme, a dead URL anywhere but that phone.
+    -->
+    <section class="hero" style="min-height: 60svh;">
+      <div class="hero-inner">
+        <p class="section-kicker">/plan</p>
+        <h1 id="headline">Set your new password</h1>
+        <p class="sub" id="lede">Open Plan on the phone you asked from and choose a new password.</p>
+        <p id="actions">
+          <a class="btn solid" id="open-app" href="#" style="display:none">Open Plan</a>
+        </p>
+        <p class="sub" id="hint" style="display:none; font-size:.95rem; opacity:.8;">On the phone you asked from? Tap <strong>Open Plan</strong>.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>&copy; 2026 Bone Dog Studios LLC</span>
+    <nav>
+      <a href="/plan/privacy/">Privacy Policy</a>
+      <a href="/plan/terms/">Terms of Service</a>
+      <a href="/">Bone Dog Studios</a>
+    </nav>
+  </footer>
+
+  <script>
+    (function () {
+      var q = new URLSearchParams(location.search);
+      // Supabase puts errors in the query for PKCE and in the fragment for the
+      // implicit flow; read both.
+      var h = new URLSearchParams((location.hash || '').replace(/^#/, ''));
+      var get = function (k) { return q.get(k) || h.get(k); };
+
+      var headline = document.getElementById('headline');
+      var lede = document.getElementById('lede');
+      var openApp = document.getElementById('open-app');
+      var hint = document.getElementById('hint');
+
+      var err = get('error') || get('error_code');
+      if (err) {
+        var expired = (get('error_code') || '').indexOf('expired') !== -1 ||
+                      (get('error_description') || '').toLowerCase().indexOf('expired') !== -1;
+        headline.textContent = expired ? 'That link has expired.' : 'That link didn’t work.';
+        lede.textContent = 'Open Plan, tap Forgot password, and ask for a new one.';
+        return;
+      }
+
+      var code = q.get('code');
+      // Only hand a well-formed PKCE code to the app.
+      if (code && /^[A-Za-z0-9._~-]{8,256}$/.test(code)) {
+        openApp.href = 'io.supabase.plan://reset-password?code=' + encodeURIComponent(code);
+        // site.css sets .btn { display:inline-flex }, which beats the `hidden`
+        // attribute, so toggle inline display instead.
+        openApp.style.display = '';
+        var ua = navigator.userAgent || '';
+        var mobile = /iPhone|iPad|iPod|Android/i.test(ua) ||
+          (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        if (mobile) {
+          hint.style.display = '';
+          lede.textContent = 'Choose a new password in Plan.';
+        }
+      }
+    })();
+  </script>
+</body>
+</html>
