@@ -180,7 +180,8 @@ img { max-width: 100%; display: block; }
 }
 .store-row .btn { margin-top: 0; }
 /* Official store badges (Apple and Google artwork, unaltered, self-hosted so
-   the site keeps making zero third-party requests). Apple's rules: at least
+   the site makes no third-party requests for them; the only outside call is
+   the appointment page's to /plan's own server). Apple's rules: at least
    40 px tall, clear space of a quarter of the height, one Apple badge per
    layout. Google's: at least 28 px tall, clear space of a quarter. The
    Google PNG carries its own transparent margin, so it is drawn taller to

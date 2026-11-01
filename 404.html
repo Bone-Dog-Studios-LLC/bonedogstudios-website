@@ -3,12 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
   <title>Page not found — Bone Dog Studios</title>
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
   <link rel="stylesheet" href="/assets/site.css?v=10">
   <style>
     /* small addition for the deep-link fallback content injected below */
     .hero-inner b { color: var(--bone); }
+    /* 1.0.7 appointment page (/plan/a/<token>, assets/plan-appointment.js).
+       Business-controlled text can hold long unbroken words: wrap them
+       rather than widen the page past a phone screen. */
+    #content { max-width: 100%; }
+    #content h1, #content p { overflow-wrap: anywhere; }
+    .appt-when { margin-top: 18px; font: 500 1.15rem/1.5 var(--display); color: var(--ink); }
+    .appt-state { margin-top: 18px; color: var(--bone); min-height: 1.5em; }
+    .appt-state:empty { margin-top: 0; min-height: 0; }
+    /* Order after the details: Confirm, then the app (the page's centre), then
+       other calendars as small text links. */
+    .appt-install {
+      margin: 32px auto 0; max-width: 520px; padding: 28px 20px 30px;
+      border: 1px solid rgba(242, 235, 221, .18); border-radius: 16px;
+      background: rgba(242, 235, 221, .04);
+    }
+    .appt-pitch { font: 600 clamp(1.25rem, 3.6vw, 1.5rem)/1.35 var(--display); color: var(--bone); }
+    .appt-install .store-row { margin-top: 20px; }
+    .appt-install > .btn { margin-top: 20px; }
+    .appt-cal { margin-top: 24px; font-size: .875rem; line-height: 2; color: var(--muted); }
+    .appt-cal a, .appt-cal button { white-space: nowrap; }
+    #content button.appt-link {
+      font: inherit; color: var(--bone); background: none; border: 0; padding: 0;
+      cursor: pointer; text-decoration: underline; text-underline-offset: 3px;
+    }
+    #content button.appt-link:focus-visible { outline: 2px solid var(--bone); outline-offset: 3px; }
+    #content p a:not(.btn):not(.store-badge) { text-decoration: underline; text-underline-offset: 3px; }
+    #content button.btn { cursor: pointer; background: transparent; }
+    #content button.btn.solid { background: var(--bone); }
+    #content button.btn:hover { background: rgba(242, 235, 221, .08); }
+    #content button.btn.solid:hover { background: #fff; }
+    #content .btn:focus-visible, #content a:focus-visible { outline: 2px solid var(--bone); outline-offset: 3px; }
+    #content button:disabled { opacity: .6; cursor: default; }
   </style>
 </head>
 <body>
@@ -18,6 +51,7 @@
       <h1 style="font: 600 clamp(2rem, 5vw, 3rem)/1.1 var(--display); color: var(--bone);">This page buried its bone elsewhere.</h1>
       <p class="sub">The page you're after doesn't exist. Try the homepage, or the plan page.</p>
       <a class="btn" href="/">Back to Bone Dog Studios</a>
+      <noscript><p class="sub">Turn on JavaScript to see this appointment.</p></noscript>
     </div>
   </main>
   <script>
@@ -32,6 +66,40 @@
     // it got Google's "This Google account is not yet associated with a
     // device" dialog and could not install.
     var p = location.pathname || "";
+    // 1.0.7: appointment share links (/plan/a/<token>) render the appointment
+    // here (GitHub Pages has no rewrites). The data comes from Plan's backend;
+    // see /assets/plan-appointment.js. Bump ?v=N when either script changes.
+    // If a script cannot load, say so instead of leaving "Loading…" up.
+    if (p.indexOf('/plan/a/') === 0) {
+      document.title = 'Your appointment | /plan';
+      var box = document.getElementById('content');
+      var back = box.querySelector('a[href="/"]');
+      var clearBox = function () { while (box.firstChild) box.removeChild(box.firstChild); };
+      var loadFailed = false;
+      var showLoadError = function () {
+        if (loadFailed) return;
+        loadFailed = true;
+        clearBox();
+        var h = document.createElement('h1');
+        h.className = 'appt-title';
+        h.textContent = 'We couldn’t load this appointment.';
+        var sub = document.createElement('p');
+        sub.className = 'sub';
+        sub.textContent = 'Check your connection and reload the page.';
+        box.appendChild(h); box.appendChild(sub);
+        if (back) box.appendChild(back);
+      };
+      clearBox();
+      var ph = document.createElement('p');
+      ph.className = 'sub';
+      ph.textContent = 'Loading your appointment…';
+      box.appendChild(ph);
+      ['/assets/plan-ics.js?v=1', '/assets/plan-appointment.js?v=1'].forEach(function (src) {
+        var s = document.createElement('script');
+        s.src = src; s.async = false; s.onerror = showLoadError;
+        document.body.appendChild(s);
+      });
+    }
     if (p.indexOf('/plan/u/') === 0 || p.indexOf('/plan/b/') === 0) {
       var APP_STORE = 'https://apps.apple.com/us/app/plan-by-bone-dog-studios/id6777535954';
       var PLAY = 'https://play.google.com/store/apps/details?id=com.bonedogstudios.plan';
