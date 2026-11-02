@@ -14,8 +14,8 @@
   var SUPABASE_URL = 'https://wvvysvrswiuusjluwtss.supabase.co';
   // Publishable (anon-role) key, public by design. Read with the Supabase MCP
   // get_publishable_keys at Task D3; never a secret or service key.
-  // GET ?t=<token> -> the same .ics bytes as plan-ics.js, served as
-  // text/calendar (edge function appointment-ics, verify_jwt off).
+  // GET ?t=<token>[&tz=<IANA zone>] -> the same .ics bytes as plan-ics.js,
+  // served as text/calendar (edge function appointment-ics, verify_jwt off).
   var ICS_URL = SUPABASE_URL + '/functions/v1/appointment-ics';
   var SUPABASE_KEY = 'sb_publishable_IazAzTivS8vS8ZfY90nkPg_fOmBrLWF';
   var APP_STORE = 'https://apps.apple.com/us/app/plan-by-bone-dog-studios/id6777535954';
@@ -212,7 +212,13 @@
       var cal = el('p', 'appt-cal');
       // Safari hands a text/calendar response to Calendar; a Blob download
       // lands in Files instead (spec 2.2), hence the server route here.
-      cal.appendChild(link(null, ICS_URL + '?t=' + token, 'Add to Apple Calendar'));
+      // The viewer's IANA zone, so both files carry wall-clock times with a
+      // TZID instead of UTC (iOS shows a "(GMT)" line for UTC; b45 E3, F-4).
+      // The server re-validates it; none = the UTC file.
+      var zone = '';
+      try { zone = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) { zone = ''; }
+      cal.appendChild(link(null, ICS_URL + '?t=' + token + (zone ? '&tz=' + encodeURIComponent(zone) : ''),
+        'Add to Apple Calendar'));
       cal.appendChild(document.createTextNode('\u00a0· '));
       cal.appendChild(link(null, googleUrl(a, service, start, end, details, where),
         'Add to Google Calendar', 'Add to Google Calendar, opens Google Calendar'));
@@ -223,7 +229,7 @@
         var text = PlanIcs.build({
           uid: 'share-' + token, start: start, end: end,
           summary: service + ' · ' + a.business_name,
-          description: details, location: where || null
+          description: details, location: where || null, tz: zone || null
         });
         var blob = new Blob([text], { type: 'text/calendar;charset=utf-8' });
         var href = URL.createObjectURL(blob);

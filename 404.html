@@ -94,7 +94,7 @@
       ph.className = 'sub';
       ph.textContent = 'Loading your appointment…';
       box.appendChild(ph);
-      ['/assets/plan-ics.js?v=1', '/assets/plan-appointment.js?v=1'].forEach(function (src) {
+      ['/assets/plan-ics.js?v=2', '/assets/plan-appointment.js?v=2'].forEach(function (src) {
         var s = document.createElement('script');
         s.src = src; s.async = false; s.onerror = showLoadError;
         document.body.appendChild(s);
